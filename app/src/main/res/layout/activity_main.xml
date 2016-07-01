@@ -61,18 +61,32 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set Time"
-        android:id="@+id/setTime"
-        android:layout_below="@+id/speedText"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="Connect"
         android:id="@+id/btconnect"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reset"
+        android:id="@+id/reset"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time Update       "
+        android:id="@+id/setTime"
+        android:checked="false"
+        android:layout_below="@+id/speedText"
+        android:layout_alignRight="@+id/reset"
+        android:layout_alignEnd="@+id/reset"
+        android:layout_alignLeft="@+id/btconnectstate"
+        android:layout_alignStart="@+id/btconnectstate"
+        android:layout_above="@+id/btconnect" />
 
 </RelativeLayout>

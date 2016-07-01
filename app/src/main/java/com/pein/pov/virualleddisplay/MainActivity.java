@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,11 +23,15 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     private final static int REQUEST_ENABLE_BT = 1;
+    public static Object lock = new Object();
+    public static boolean timeDisp = false;
 
     //difining interface elements
-    Button sendTextButton,sendSpeedButton,setTimeButton,connectDeviceButton;
+    Switch setTimeSwitch;
+    Button sendTextButton,sendSpeedButton,connectDeviceButton,resetButton;
     EditText patternText,speedText;
     TextView connectionStatus;
+
 
     //keypad hide
     InputMethodManager inputManager;
@@ -41,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
         //defining elements in interface
         sendTextButton = (Button) findViewById(R.id.sendText);
         sendSpeedButton = (Button) findViewById(R.id.changeSpeed);
-        setTimeButton = (Button) findViewById(R.id.setTime);
+        resetButton = (Button) findViewById(R.id.reset);
+        setTimeSwitch = (Switch) findViewById(R.id.setTime);
         connectDeviceButton = (Button) findViewById(R.id.btconnect);
 
         patternText = (EditText) findViewById(R.id.patternText);
@@ -53,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
         filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(dReceiver, filter);
 
+        //timer thrad
+        Time time = new Time();
+        time.start();
+
 
         //check whether eit bluetooth adaptor
         checkBluetoothAvailable();
@@ -61,8 +72,10 @@ public class MainActivity extends AppCompatActivity {
         //button click actions
         onSendPatternButtonClick();
         onSendSpeedButtonClick();
-        onSetTimeButtonClick();
+        //onSetTimeButtonClick();
         onSetConnectButtionClick();
+        onSetTimeSwitchChange();
+        onResetButtonClick();
     }
 
 
@@ -189,57 +202,56 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void onSetTimeButtonClick(){
-        setTimeButton.setOnClickListener(new View.OnClickListener() {
+//    private void onSetTimeButtonClick(){
+//        setTimeSwitch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            //    String timeText = makeTimeString();
+//                timeText = "@t"+timeText+"#";
+//
+//                //send time ?????????????????????????????????????????????
+//                BluetoothHandle.write(timeText);
+//                Toast msg = Toast.makeText(getBaseContext(),"Time Update",Toast.LENGTH_LONG);
+//                msg.show();
+//                Log.i("Display Mode", "Changed to Time Display");
+//            }
+//        });
+//    }
+
+    private void onSetTimeSwitchChange(){
+        setTimeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-
-                String timeText = makeTimeString();
-                timeText = "@t"+timeText+"#";
-
-                //send time ?????????????????????????????????????????????
-                BluetoothHandle.write(timeText);
-                Toast msg = Toast.makeText(getBaseContext(),"Time Update",Toast.LENGTH_LONG);
-                msg.show();
-                Log.i("Display Mode", "Changed to Time Display");
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    sendTextButton.setEnabled(false);
+                    synchronized (lock) {
+                        timeDisp = true;
+                    }
+                }
+                else{
+                    sendTextButton.setEnabled(true);
+                    synchronized (lock) {
+                        timeDisp = false;
+                    }
+                }
             }
         });
     }
 
-
-    private String makeTimeString(){
-        Calendar cal = Calendar.getInstance();
-        int sec = cal.get(Calendar.SECOND);
-        int hr = cal.get(Calendar.HOUR);
-        int min = cal.get(Calendar.MINUTE);
-        int am = cal.get(Calendar.AM);
-        String hour = "";
-        String minute = "";
-        String seconds = "";
-
-        if(am!=1){
-            if(hr!=12){
-                hr=hr+12;
+    private void onResetButtonClick(){
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = "@reset#";
+                Toast msg = Toast.makeText(getBaseContext(),"Resetted",Toast.LENGTH_LONG);
+                BluetoothHandle.write(text);
+                msg.show();
+                Log.i("Display","resetted");
             }
-        }
-
-        if(hr<10)
-            hour = "0"+hr;
-        else
-            hour = hr+"";
-
-        if(min<10)
-            minute = "0"+min;
-        else
-            minute = min+"";
-
-        if(sec<10)
-            seconds = "0"+sec;
-        else
-            seconds = sec+"";
-
-        return hour+minute+seconds;
+        });
     }
+
 
     private void onSetConnectButtionClick(){
         connectDeviceButton.setOnClickListener(new View.OnClickListener() {
@@ -252,5 +264,3 @@ public class MainActivity extends AppCompatActivity {
 
 
 }
-
-

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/VirtualLEDDisplayBTapp.iml" filepath="$PROJECT_DIR$/VirtualLEDDisplayBTapp.iml" />
       <module fileurl="file://$PROJECT_DIR$/VirualLEDDisplay.iml" filepath="$PROJECT_DIR$/VirualLEDDisplay.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

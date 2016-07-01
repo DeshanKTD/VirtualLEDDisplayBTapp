@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -52,6 +53,7 @@ public class BluetoothHandle extends Thread {
     private void connectToDevice(){
         try{
             mmSocket.connect();
+
         }
         catch (IOException e){
             Log.e("BTSocketConnection","Cannot connect to the socket");
@@ -62,6 +64,12 @@ public class BluetoothHandle extends Thread {
                 Log.e("BTSocketConnection","Cannot close the socket");
             }
         }
+//        if(mmSocket.isConnected()){
+//            MainActivity.connectionStatus.setText("Connected");
+//        }
+//        else{
+//            MainActivity.connectionStatus.setText("Not onnected");
+//        }
     }
 
     //make sending configrations
